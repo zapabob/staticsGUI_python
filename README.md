@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# 🔬 HAD - High-Performance Analytics Dashboard
-=======
-# 🔬  Professional Statistical Analysis Software
->>>>>>> 63f6782794074e3930dd7e02e49f9dc9ed5986b1
+# 🔬 Professional Statistics Suite
 
 **Professional Statistical Analysis Software with Advanced AI Integration** | **高度AI統合機能を搭載したプロフェッショナル統計解析ソフトウェア**
 
@@ -13,13 +9,9 @@
 
 ## 📋 Overview | 概要
 
-<<<<<<< HEAD
-**English**: HAD is a comprehensive statistical analysis software designed for data scientists and researchers. It provides professional-grade analysis capabilities in an intuitive GUI environment with enterprise-level features including AI integration, GPU acceleration, and robust error recovery systems.
-=======
-Professional Statistical Analysis Softwareは、研究者・データサイエンティスト・統計専門家のための**次世代統計解析プラットフォーム**です。高度な統計手法、機械学習、ベイズ解析、生存解析を統合し、プロフェッショナルレベルの解析を実現します。
->>>>>>> 63f6782794074e3930dd7e02e49f9dc9ed5986b1
+**English**: Professional Statistics Suite is a comprehensive statistical analysis software designed for data scientists and researchers. It provides professional-grade analysis capabilities in an intuitive GUI environment with enterprise-level features including AI integration, GPU acceleration, and robust error recovery systems.
 
-**日本語**: HADは、データサイエンティストと研究者向けの包括的統計解析ソフトウェアです。AI統合、GPU加速、堅牢なエラー復旧システムなどのエンタープライズレベル機能を備えた直感的なGUI環境でプロフェッショナルグレードの解析機能を提供します。
+**日本語**: Professional Statistics Suiteは、データサイエンティストと研究者向けの包括的統計解析ソフトウェアです。AI統合、GPU加速、堅牢なエラー復旧システムなどのエンタープライズレベル機能を備えた直感的なGUI環境でプロフェッショナルグレードの解析機能を提供します。
 
 ## ✨ Key Features | 主要機能
 
@@ -126,8 +118,8 @@ Professional Statistical Analysis Softwareは、研究者・データサイエ�
 ### 2. Package Installation | パッケージインストール
 ```bash
 # Clone repository | リポジトリクローン
-git clone https://github.com/your-repo/HAD_backups.git
-cd HAD_backups
+git clone https://github.com/zapabob/professional-statistics-suite.git
+cd professional-statistics-suite
 
 # Install dependencies | 依存関係インストール
 pip install -r requirements.txt
@@ -252,7 +244,7 @@ py -3 run_web_dashboard.py
 ## 📁 Project Structure | プロジェクト構成
 
 ```
-HAD_backups/
+professional-statistics-suite/
 ├── main.py                      # Main GUI application | メインGUIアプリケーション
 ├── web_dashboard.py             # Web interface | Webインターフェース
 ├── run_web_dashboard.py         # Web launcher | Web起動スクリプト
@@ -426,8 +418,8 @@ pip install customtkinter>=5.0.0
 
 ```bash
 # 1. Clone repository | リポジトリクローン
-git clone https://github.com/your-repo/HAD_backups.git
-cd HAD_backups
+git clone https://github.com/zapabob/professional-statistics-suite.git
+cd professional-statistics-suite
 
 # 2. Install dependencies | 依存関係インストール
 pip install -r requirements.txt
@@ -443,9 +435,5 @@ py -3 run_web_dashboard.py
 
 ---
 
-<<<<<<< HEAD
-**© 2024 Ryo Minegishi. Professional Statistical Analysis Software with Enterprise-Grade Features.**  
-**© 2024 峰岸 諒. エンタープライズグレード機能を搭載したプロフェッショナル統計解析ソフトウェア.**
-=======
-*Made with ❤️ by Ryo Minegishi | © 2024 HAD Professional Statistical Analysis Software*
->>>>>>> 63f6782794074e3930dd7e02e49f9dc9ed5986b1
+**© 2024 Ryo Minegishi. Professional Statistics Suite - Enterprise-Grade Statistical Analysis Software.**  
+**© 2024 峰岸 諒. Professional Statistics Suite - エンタープライズグレード統計解析ソフトウェア.**
