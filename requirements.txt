@@ -1,193 +1,277 @@
-# Core data science libraries
-numpy>=1.21.0
-pandas>=1.5.0
-scipy>=1.9.0
-scikit-learn>=1.1.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
-plotly>=5.10.0
+# Professional Statistics Suite - Requirements
+# RTX 30/40/50 & Apple Silicon M2+ Optimized Dependencies
 
-# Statistical analysis
-statsmodels>=0.13.0
-pingouin>=0.5.0
-lifelines>=0.27.0
-
-# Machine Learning
-xgboost>=1.6.0
-lightgbm>=3.3.0
-torch>=1.12.0
-torchvision>=0.13.0
-
-# GUI
-tkinter
-customtkinter>=5.0.0
-
-# System utilities
-psutil>=5.9.0
-memory-profiler>=0.60.0
-tqdm>=4.64.0
-
-# Visualization backends
-kaleido>=0.2.1
-
-# Data processing
-openpyxl>=3.0.9
-xlrd>=2.0.1
-
-# AI and Natural Language Processing
-openai>=1.0.0
-google-generativeai>=0.3.0
-langchain>=0.1.0
-langchain-openai>=0.0.5
-langchain-google-genai>=0.0.5
-
-# Image processing and OCR
-pillow>=9.0.0
-opencv-python>=4.5.0
-pytesseract>=0.3.10
-easyocr>=1.6.0
-
-# MCP (Model Context Protocol) support
-httpx>=0.24.0
-websockets>=11.0.0
-pydantic>=2.0.0
-
-# Advanced data analysis
-spacy>=3.4.0
-transformers>=4.20.0
-
-# File format support
-python-docx>=0.8.11
-pdfplumber>=0.7.0
-
-# API utilities
-requests>=2.28.0
-aiohttp>=3.8.0
-
-# Configuration management
-python-dotenv>=0.19.0
-pyyaml>=6.0
-
-# Professional Features - 추가 필수 라이브러리
-jinja2>=3.1.0           # プロフェッショナルレポート生成
-cryptography>=3.4.8
-
-# 高度統計解析・最適化
-statsmodels>=0.14.0
-pingouin>=0.5.3
-lifelines>=0.27.0
-numba>=0.58.0
-psutil>=5.9.0
+# ================================================
+# Core Data Science Libraries
+# ================================================
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
 scikit-learn>=1.3.0
-scipy>=1.11.0
-
-# 並列処理・最適化
-joblib>=1.1.0
-tqdm>=4.66.0
-
-# オプション: ベイズ統計（高度機能）
-# pymc>=5.7.0
-# arviz>=0.16.0
-
-# オプション: 分散処理（大規模データ）
-# dask[complete]>=2023.8.0     # セキュリティ機能
-
-# 統計解析専門ライブラリ
-statsmodels>=0.14.0
-pingouin>=0.5.3
-scikit-learn>=1.3.0
-scikit-image>=0.21.0
-arviz>=0.15.0           # ベイズ診断
-
-# 高度な機械学習
-catboost>=1.1.0
-optuna>=3.0.0           # ハイパーパラメータ最適化
-imbalanced-learn>=0.10.0
-
-# 深層学習フレームワーク
-tensorflow>=2.9.0
-torchaudio>=2.0.0
-keras-tuner>=1.3.0
-
-# 時系列解析
-arch>=5.3.0             # GARCH モデル
-statsforecast>=1.4.0
-tsfresh>=0.20.0         # 時系列特徴抽出
-prophet>=1.1.0          # Facebook Prophet
-
-# 可視化・グラフィックス
 matplotlib>=3.7.0
 seaborn>=0.12.0
-plotly>=5.14.0
-bokeh>=3.1.0
-altair>=5.0.0
-dash>=2.10.0            # インタラクティブダッシュボード
+plotly>=5.17.0
 
-# GUI フレームワーク
-PyQt5>=5.15.0
-streamlit>=1.28.0       # Webベース GUI - Mac M2対応
-plotly>=5.17.0          # インタラクティブプロット
+# ================================================
+# GPU Acceleration - NVIDIA RTX 30/40/50 Series
+# ================================================
+# PyTorch with CUDA 12.1 support (RTX 40/50 optimized)
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
 
-# データ処理・I/O
-xlsxwriter>=3.1.0
-pyarrow>=12.0.0         # Parquet サポート
-h5py>=3.8.0
-joblib>=1.2.0
+# TensorFlow with CUDA support
+tensorflow>=2.14.0; platform_system=="Windows" or platform_system=="Linux"
+tensorflow-metal>=1.0.0; platform_system=="Darwin"
 
-# プロフェッショナル機能
-fpdf2>=2.7.0            # PDF レポート生成
-jinja2>=3.1.0           # レポートテンプレート
-networkx>=3.1.0         # ネットワーク解析
-umap-learn>=0.5.3       # UMAP 次元削減
-hdbscan>=0.8.29         # HDBSCAN クラスタリング
+# CUDA-specific optimizations
+nvidia-cublas-cu12>=12.1.0; platform_system=="Windows" or platform_system=="Linux"
+nvidia-cuda-runtime-cu12>=12.1.0; platform_system=="Windows" or platform_system=="Linux"
+nvidia-cudnn-cu12>=8.9.0; platform_system=="Windows" or platform_system=="Linux"
 
-# ユーティリティ
-tqdm>=4.65.0
-psutil>=5.9.0           # システム監視
-memory-profiler>=0.60.0 # メモリプロファイリング
+# ================================================
+# Apple Silicon M2+ Optimization
+# ================================================
+# Mac-specific optimizations
+tensorflow-metal>=1.0.0; platform_system=="Darwin"
+# Apple MLX framework for M-series chips
+mlx>=0.0.9; platform_system=="Darwin"
 
-# 統計解析・機械学習アプリケーションの必要パッケージ
-# Core Data Science Libraries
-pandas>=1.5.0
-numpy>=1.21.0
-scipy>=1.9.0
-scikit-learn>=1.1.0
+# ================================================
+# Advanced Machine Learning & AI
+# ================================================
+xgboost>=2.0.0
+lightgbm>=4.1.0
+catboost>=1.2.0
+optuna>=3.4.0
+transformers>=4.35.0
+langchain>=0.0.340
+openai>=1.3.0
+google-generativeai>=0.3.0
 
-# Visualization Libraries
-matplotlib>=3.5.0
-seaborn>=0.11.0
-plotly>=5.10.0
+# Model interpretability
+shap>=0.43.0
+lime>=0.2.0.1
 
-# GUI Libraries
-tkinter
-customtkinter>=5.0.0
+# ================================================
+# Statistical Analysis & Advanced Methods
+# ================================================
+statsmodels>=0.14.0
+pingouin>=0.5.3
+lifelines>=0.27.0
+pymc>=5.8.0
+arviz>=0.16.0
+scikit-survival>=0.21.0
 
-# Deep Learning (CUDA対応)
-torch>=1.12.0
-torchvision>=0.13.0
-tensorflow>=2.9.0
+# Time series analysis
+prophet>=1.1.4
+arch>=6.2.0
+statsforecast>=1.5.0
+tsfresh>=0.20.0
 
-# Advanced ML Libraries
-xgboost>=1.6.0
-lightgbm>=3.3.0
-catboost>=1.1.0
-optuna>=3.0.0
+# Bayesian analysis
+pystan>=3.8.0
+numpyro>=0.13.0; platform_system=="Darwin"  # Apple Silicon optimized
 
-# Statistical Libraries
-statsmodels>=0.13.0
-pingouin>=0.5.0
+# ================================================
+# High-Performance Computing
+# ================================================
+numba>=0.58.0
+jax>=0.4.20; platform_system=="Darwin"  # Apple Silicon accelerated
+jaxlib>=0.4.20; platform_system=="Darwin"
 
-# Data Processing
-tqdm>=4.64.0
-Jinja2>=3.1.0
+# Parallel processing
+joblib>=1.3.0
+dask[complete]>=2023.10.0
+ray>=2.8.0
 
-# Utility Libraries
+# Memory optimization
 psutil>=5.9.0
-joblib>=1.1.0
-pickle-mixin>=1.0.2
+memory-profiler>=0.61.0
 
-# Optional: Advanced Features
-# nbformat>=5.0.0  # Jupyter notebook support
-# ipykernel>=6.0.0  # Jupyter kernel
-# openpyxl>=3.0.0   # Excel file support
-# xlsxwriter>=3.0.0 # Excel export 
+# ================================================
+# Visualization & Graphics
+# ================================================
+bokeh>=3.3.0
+altair>=5.1.0
+dash>=2.14.0
+streamlit>=1.28.0
+plotly-dash>=2.14.0
+
+# 3D visualization
+mayavi>=4.8.0; platform_system=="Windows" or platform_system=="Linux"
+vtk>=9.3.0
+
+# ================================================
+# GUI Frameworks
+# ================================================
+customtkinter>=5.2.0
+PyQt6>=6.6.0; platform_system=="Windows" or platform_system=="Linux"
+pyside6>=6.6.0; platform_system=="Darwin"  # Better Mac support
+
+# ================================================
+# Data Processing & I/O
+# ================================================
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0
+pyarrow>=14.0.0
+h5py>=3.10.0
+tables>=3.9.0
+zarr>=2.16.0
+
+# Database connectivity
+sqlalchemy>=2.0.0
+pymongo>=4.6.0
+redis>=5.0.0
+
+# ================================================
+# Image & Computer Vision
+# ================================================
+pillow>=10.1.0
+opencv-python>=4.8.0
+scikit-image>=0.22.0
+imageio>=2.31.0
+
+# OCR capabilities
+pytesseract>=0.3.10
+easyocr>=1.7.0
+
+# ================================================
+# Natural Language Processing
+# ================================================
+spacy>=3.7.0
+nltk>=3.8.0
+textblob>=0.17.0
+wordcloud>=1.9.0
+
+# ================================================
+# Professional Features
+# ================================================
+# Report generation
+jinja2>=3.1.0
+fpdf2>=2.7.0
+weasyprint>=60.0; platform_system=="Windows" or platform_system=="Linux"
+reportlab>=4.0.0
+
+# Security & encryption
+cryptography>=41.0.0
+keyring>=24.3.0
+
+# Configuration management
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+toml>=0.10.0
+
+# ================================================
+# Network & API
+# ================================================
+requests>=2.31.0
+aiohttp>=3.9.0
+httpx>=0.25.0
+websockets>=12.0.0
+fastapi>=0.104.0
+
+# MCP (Model Context Protocol)
+pydantic>=2.5.0
+uvicorn>=0.24.0
+
+# ================================================
+# Development & Testing
+# ================================================
+tqdm>=4.66.0
+rich>=13.7.0
+typer>=0.9.0
+click>=8.1.0
+
+# Testing (optional)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-benchmark>=4.0.0
+
+# ================================================
+# Network Analysis & Graph Theory
+# ================================================
+networkx>=3.2.0
+igraph>=0.10.0; platform_system=="Windows" or platform_system=="Linux"
+graph-tool>=2.45; platform_system=="Linux"
+
+# ================================================
+# Dimensionality Reduction & Clustering
+# ================================================
+umap-learn>=0.5.4
+hdbscan>=0.8.33
+pacmap>=0.6.4
+trimap>=1.1.4
+
+# ================================================
+# Optimization & Hyperparameter Tuning
+# ================================================
+hyperopt>=0.2.7
+skopt>=0.9.0
+bayesian-optimization>=1.4.0
+
+# ================================================
+# Audio Processing (for multimodal analysis)
+# ================================================
+librosa>=0.10.0
+soundfile>=0.12.0
+
+# ================================================
+# GPU Memory Management
+# ================================================
+# NVIDIA GPU monitoring
+gpustat>=1.1.0; platform_system=="Windows" or platform_system=="Linux"
+pynvml>=11.5.0; platform_system=="Windows" or platform_system=="Linux"
+
+# Apple Silicon monitoring
+py-cpuinfo>=9.0.0; platform_system=="Darwin"
+
+# ================================================
+# Performance Profiling
+# ================================================
+line-profiler>=4.1.0
+py-spy>=0.3.14
+scalene>=1.5.0
+
+# ================================================
+# Jupyter Ecosystem (Optional)
+# ================================================
+jupyter>=1.0.0
+jupyterlab>=4.0.0
+ipywidgets>=8.1.0
+notebook>=7.0.0
+
+# ================================================
+# Platform-Specific Optimizations
+# ================================================
+
+# Windows-specific optimizations
+pywin32>=306; platform_system=="Windows"
+wmi>=1.5.1; platform_system=="Windows"
+
+# Linux-specific optimizations
+python-prctl>=1.8.0; platform_system=="Linux"
+
+# macOS-specific optimizations
+pyobjc>=10.0; platform_system=="Darwin"
+pyobjc-framework-Metal>=10.0; platform_system=="Darwin"
+pyobjc-framework-MetalKit>=10.0; platform_system=="Darwin"
+pyobjc-framework-Accelerate>=10.0; platform_system=="Darwin"
+
+# ================================================
+# Optional: Experimental Features
+# ================================================
+# Intel Extension for PyTorch (Intel GPU support)
+# intel-extension-for-pytorch>=2.1.0; platform_system=="Windows" or platform_system=="Linux"
+
+# AMD ROCm support (AMD GPU)
+# torch-audio-rocm>=2.1.0; platform_system=="Linux"
+
+# ================================================
+# Version Notes:
+# - PyTorch 2.1+ with CUDA 12.1 for RTX 40/50 series
+# - TensorFlow 2.14+ with Metal backend for Apple Silicon
+# - MLX framework for M2+ native acceleration  
+# - JAX with Apple Silicon optimization
+# - Platform-specific conditional installs
+# ================================================ 

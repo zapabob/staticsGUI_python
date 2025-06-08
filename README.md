@@ -6,8 +6,11 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-lightgrey.svg)]()
-[![GPU](https://img.shields.io/badge/GPU-CUDA%20Enabled-orange.svg)]()
-[![RTX3080](https://img.shields.io/badge/GPU-RTX3080%20Optimized-brightgreen.svg)]()
+[![CUDA](https://img.shields.io/badge/CUDA-12.1+-orange.svg)]()
+[![RTX](https://img.shields.io/badge/RTX-30%2F40%2F50%20Series-brightgreen.svg)]()
+[![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-M2%2B%20Native-blue.svg)]()
+[![Metal](https://img.shields.io/badge/Metal-Performance%20Shaders-silver.svg)]()
+[![MLX](https://img.shields.io/badge/MLX-Framework-purple.svg)]()
 
 ## 📋 Overview | 概要
 
@@ -89,19 +92,36 @@
 - **傾向スコア解析**: マッチング、層化、逆確率重み付け
 - **ブートストラップ・順列**: 信頼区間付きリサンプリング手法
 
+### 🚀 Next-Generation Hardware Acceleration | 次世代ハードウェア加速
+**English**:
+- **NVIDIA RTX 30/40/50 Series**: CUDA 12.1 optimization with mixed precision training, Tensor Core acceleration
+- **Apple Silicon M2+ Native**: MLX framework support, Metal Performance Shaders optimization, Neural Engine utilization
+- **Automatic Hardware Detection**: Smart device recognition and optimal configuration selection
+- **Cross-Platform Optimization**: Windows (DirectML), macOS (Metal), Linux (CUDA/ROCm)
+- **Memory Management**: Intelligent GPU memory allocation with dynamic batching
+- **Performance Profiling**: Real-time hardware utilization monitoring and optimization suggestions
+
+**日本語**:
+- **NVIDIA RTX 30/40/50シリーズ**: CUDA 12.1最適化（混合精度訓練、Tensor Core加速）
+- **Apple Silicon M2+ネイティブ**: MLXフレームワーク対応、Metal Performance Shaders最適化、Neural Engine活用
+- **自動ハードウェア検出**: スマートデバイス認識と最適構成選択
+- **クロスプラットフォーム最適化**: Windows (DirectML)、macOS (Metal)、Linux (CUDA/ROCm)
+- **メモリ管理**: 動的バッチングによるインテリジェントGPUメモリ割り当て
+- **パフォーマンスプロファイリング**: リアルタイムハードウェア利用率監視と最適化提案
+
 ### 🤖 Machine Learning & AI | 機械学習・AI機能
 **English**:
-- **Advanced Algorithms**: XGBoost, LightGBM, CatBoost, Random Forest
-- **Deep Learning**: Neural networks with CUDA acceleration (RTX 3080 optimized)
-- **AutoML Pipeline**: Automated preprocessing, feature selection, hyperparameter tuning
+- **Advanced Algorithms**: XGBoost, LightGBM, CatBoost, Random Forest with hardware acceleration
+- **Deep Learning**: PyTorch 2.1+ & TensorFlow 2.14+ with next-gen GPU optimization
+- **AutoML Pipeline**: Automated preprocessing, feature selection, hyperparameter tuning with GPU acceleration
 - **Model Interpretability**: SHAP values, LIME, permutation importance
 - **Cross-Validation**: Stratified, time series, group-based validation
 - **Ensemble Methods**: Voting, bagging, stacking classifiers
 
 **日本語**:
-- **高度アルゴリズム**: XGBoost、LightGBM、CatBoost、Random Forest
-- **深層学習**: CUDA加速ニューラルネットワーク（RTX 3080最適化）
-- **AutoMLパイプライン**: 自動前処理、特徴選択、ハイパーパラメータ調整
+- **高度アルゴリズム**: ハードウェア加速対応XGBoost、LightGBM、CatBoost、Random Forest
+- **深層学習**: 次世代GPU最適化PyTorch 2.1+・TensorFlow 2.14+
+- **AutoMLパイプライン**: GPU加速対応自動前処理、特徴選択、ハイパーパラメータ調整
 - **モデル解釈性**: SHAP値、LIME、順列重要度
 - **交差検証**: 層化、時系列、グループベース検証
 - **アンサンブル手法**: 投票、バギング、スタッキング分類器
@@ -127,18 +147,26 @@
 
 ### 1. System Requirements | システム要件
 **English**:
-- **Operating System**: Windows 10/11, macOS 10.15+, or Linux Ubuntu 18.04+
-- **Python**: 3.8 or higher (3.10+ recommended)
-- **Memory**: 8GB+ RAM (16GB+ for large datasets)
-- **Storage**: 2GB+ free space
-- **GPU**: CUDA-compatible (RTX 3080 optimized, optional)
+- **Operating System**: Windows 10/11, macOS 12.0+ (Monterey), or Linux Ubuntu 20.04+
+- **Python**: 3.8 or higher (3.10+ recommended for optimal performance)
+- **Memory**: 8GB+ RAM (16GB+ for large datasets, 32GB+ for enterprise workloads)
+- **Storage**: 4GB+ free space (additional space for models and cache)
+- **GPU Acceleration** (Optional but Recommended):
+  - **NVIDIA**: RTX 30/40/50 series with CUDA 12.1+ support (RTX 4090/4080 optimal)
+  - **Apple Silicon**: M2, M2 Pro, M2 Max, M2 Ultra, M3+ with 16GB+ unified memory
+  - **Intel**: Arc A-series with Intel Extension for PyTorch
+  - **AMD**: RDNA2/3 with ROCm support (Linux)
 
 **日本語**:
-- **オペレーティングシステム**: Windows 10/11、macOS 10.15以上、またはLinux Ubuntu 18.04以上
-- **Python**: 3.8以上（3.10以上推奨）
-- **メモリ**: 8GB以上のRAM（大規模データセット用に16GB以上）
-- **ストレージ**: 2GB以上の空き容量
-- **GPU**: CUDA対応（RTX 3080最適化、オプション）
+- **オペレーティングシステム**: Windows 10/11、macOS 12.0以上 (Monterey)、またはLinux Ubuntu 20.04以上
+- **Python**: 3.8以上（最適パフォーマンスには3.10以上推奨）
+- **メモリ**: 8GB以上のRAM（大規模データセット用に16GB以上、エンタープライズワークロード用に32GB以上）
+- **ストレージ**: 4GB以上の空き容量（モデルとキャッシュ用追加容量）
+- **GPU加速** (オプションだが推奨):
+  - **NVIDIA**: CUDA 12.1+対応RTX 30/40/50シリーズ（RTX 4090/4080最適）
+  - **Apple Silicon**: 16GB以上統合メモリ搭載M2、M2 Pro、M2 Max、M2 Ultra、M3以上
+  - **Intel**: Intel Extension for PyTorch対応Arc Aシリーズ
+  - **AMD**: ROCm対応RDNA2/3（Linux）
 
 ### 2. Installation Steps | インストール手順
 ```bash
@@ -153,15 +181,27 @@ venv\Scripts\activate
 # macOS/Linux | macOS/Linux環境
 source venv/bin/activate
 
-# 3. Install dependencies | 依存関係インストール
+# 3. Install dependencies with hardware optimization | ハードウェア最適化付き依存関係インストール
 pip install -r requirements.txt
 
-# 4. Optional: GPU acceleration | オプション: GPU加速
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
-pip install tensorflow[and-cuda]
+# 4. Hardware-specific optimizations | ハードウェア固有最適化
 
-# 5. Verify installation | インストール確認
+## For NVIDIA RTX 30/40/50 Series | NVIDIA RTX 30/40/50シリーズ用
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install tensorflow[and-cuda]>=2.14.0
+pip install nvidia-cublas-cu12 nvidia-cuda-runtime-cu12 nvidia-cudnn-cu12
+
+## For Apple Silicon M2+ | Apple Silicon M2+用
+pip install tensorflow-metal mlx
+pip install torch torchvision torchaudio  # Apple Silicon native
+
+## For Intel/AMD GPUs | Intel/AMD GPU用
+pip install intel-extension-for-pytorch  # Intel GPUs
+# pip install torch-directml  # DirectML for AMD/Intel on Windows
+
+# 5. Verify installation & hardware detection | インストール確認・ハードウェア検出
 py -3 test_environment.py
+py -3 -c "from config import get_hardware_summary; print(get_hardware_summary())"
 ```
 
 ### 3. Launch Options | 起動オプション
