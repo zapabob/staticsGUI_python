@@ -1,0 +1,290 @@
+# バイトコードとキャッシュファイル
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 配布用ファイル
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 単体テスト・カバレッジ
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# 翻訳関連
+*.mo
+*.pot
+
+# Django関連
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask関連
+instance/
+.webassets-cache
+
+# Scrapy関連
+.scrapy
+
+# ドキュメント
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+.pdm-python
+.pdm-build/
+
+# PEP 582
+__pypackages__/
+
+# Celery関連
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath関連
+*.sage.py
+
+# 環境変数ファイル
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder関連
+.spyderproject
+.spyproject
+
+# Rope関連
+.ropeproject
+
+# mkdocs関連
+/site
+
+# mypy関連
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre関連
+.pyre/
+
+# pytype関連
+.pytype/
+
+# Cython関連
+cython_debug/
+
+# PyCharm関連
+.idea/
+
+# 機械学習・データサイエンス関連
+# データファイル
+*.csv
+*.json
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.parquet
+*.feather
+*.msgpack
+*.npz
+*.npy
+
+# モデルファイル
+*.model
+*.pt
+*.pth
+*.ckpt
+*.pb
+*.tflite
+*.onnx
+*.joblib
+
+# TensorBoard関連
+runs/
+logs/
+tensorboard/
+tb_logs/
+
+# MLflow関連
+mlruns/
+.mlflow/
+
+# Weights & Biases関連
+wandb/
+
+# DVC関連
+.dvc
+.dvcignore
+
+# Optuna関連
+optuna.db
+
+# CUDA関連
+*.cubin
+*.fatbin
+*.ptx
+
+# データセット・大容量ファイル
+datasets/
+data/
+raw_data/
+processed_data/
+images/
+videos/
+audio/
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# チェックポイント・バックアップファイル
+checkpoints/
+backup/
+backups/
+*.backup
+*.bak
+*.tmp
+*.temp
+saved_models/
+model_checkpoints/
+
+# GPUメモリダンプ
+*.gpu
+*.cuda
+
+# Windows関連
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Visual Studio Code関連
+.vscode/
+*.code-workspace
+
+# 出力ファイル
+output/
+results/
+experiments/
+plots/
+figures/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+*.eps
+
+# 設定ファイル
+config.ini
+settings.json
+*.conf
+*.cfg
+
+# ログファイル
+*.log
+*.out
+*.err
+
+# セッション管理ファイル
+session_*.json
+session_*.pkl
+recovery_*.json
+
+# 一時ファイル
+temp/
+tmp/
+cache/
+.cache/
+
+# システムファイル
+.DS_Store
+.directory
+
+# IDE・エディタ関連
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# 証明書・キー
+*.pem
+*.key
+*.crt
+*.cert
+
+# API キー
+api_keys.txt
+credentials.json
+secrets.yaml
+
+# データベース
+*.db
+*.sqlite
+*.sqlite3 
