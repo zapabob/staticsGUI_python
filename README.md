@@ -1,4 +1,4 @@
-# 🔬 HAD Professional Statistical Analysis Software
+# 🔬  Professional Statistical Analysis Software
 
 **世界最高水準のプロフェッショナル統計解析プラットフォーム**
 
@@ -9,7 +9,7 @@
 
 ## 🎯 **概要**
 
-HAD Professional Statistical Analysis Softwareは、研究者・データサイエンティスト・統計専門家のための**次世代統計解析プラットフォーム**です。高度な統計手法、機械学習、ベイズ解析、生存解析を統合し、プロフェッショナルレベルの解析を実現します。
+Professional Statistical Analysis Softwareは、研究者・データサイエンティスト・統計専門家のための**次世代統計解析プラットフォーム**です。高度な統計手法、機械学習、ベイズ解析、生存解析を統合し、プロフェッショナルレベルの解析を実現します。
 
 ### ✨ **主要特徴**
 
