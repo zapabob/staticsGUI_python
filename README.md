@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 🔬 HAD - High-Performance Analytics Dashboard
+=======
+# 🔬  Professional Statistical Analysis Software
+>>>>>>> 63f6782794074e3930dd7e02e49f9dc9ed5986b1
 
 **Professional Statistical Analysis Software with Advanced AI Integration** | **高度AI統合機能を搭載したプロフェッショナル統計解析ソフトウェア**
 
@@ -9,7 +13,11 @@
 
 ## 📋 Overview | 概要
 
+<<<<<<< HEAD
 **English**: HAD is a comprehensive statistical analysis software designed for data scientists and researchers. It provides professional-grade analysis capabilities in an intuitive GUI environment with enterprise-level features including AI integration, GPU acceleration, and robust error recovery systems.
+=======
+Professional Statistical Analysis Softwareは、研究者・データサイエンティスト・統計専門家のための**次世代統計解析プラットフォーム**です。高度な統計手法、機械学習、ベイズ解析、生存解析を統合し、プロフェッショナルレベルの解析を実現します。
+>>>>>>> 63f6782794074e3930dd7e02e49f9dc9ed5986b1
 
 **日本語**: HADは、データサイエンティストと研究者向けの包括的統計解析ソフトウェアです。AI統合、GPU加速、堅牢なエラー復旧システムなどのエンタープライズレベル機能を備えた直感的なGUI環境でプロフェッショナルグレードの解析機能を提供します。
 
@@ -435,5 +443,9 @@ py -3 run_web_dashboard.py
 
 ---
 
+<<<<<<< HEAD
 **© 2024 Ryo Minegishi. Professional Statistical Analysis Software with Enterprise-Grade Features.**  
 **© 2024 峰岸 諒. エンタープライズグレード機能を搭載したプロフェッショナル統計解析ソフトウェア.**
+=======
+*Made with ❤️ by Ryo Minegishi | © 2024 HAD Professional Statistical Analysis Software*
+>>>>>>> 63f6782794074e3930dd7e02e49f9dc9ed5986b1
