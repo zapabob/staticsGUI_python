@@ -1,116 +1,97 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Professional Report Generation System
-プロフェッショナルレポート生成システム
+Professional Reports Generator
+プロフェッショナルレポート生成モジュール
 
 Author: Ryo Minegishi
+Email: r.minegishi1987@gmail.com
 License: MIT
 """
 
 import os
-import sys
 import json
-import base64
-from io import BytesIO
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any, Optional, Union
-import numpy as np
+from pathlib import Path
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-from jinja2 import Template, Environment, FileSystemLoader
-import matplotlib
-matplotlib.use('Agg')  # GUIなし環境対応
+from jinja2 import Template
 
-class ProfessionalReportGenerator:
-    """プロフェッショナルレポート生成システム"""
+class ReportGenerator:
+    """プロフェッショナルレポート生成クラス"""
     
-    def __init__(self, template_dir: str = "templates", output_dir: str = "reports"):
-        self.template_dir = Path(template_dir)
-        self.output_dir = Path(output_dir)
+    def __init__(self):
+        self.report_dir = Path("reports")
+        self.report_dir.mkdir(exist_ok=True)
         
-        # ディレクトリ作成
-        self.template_dir.mkdir(exist_ok=True)
-        self.output_dir.mkdir(exist_ok=True)
-        
-        # Jinja2環境設定
-        self.jinja_env = Environment(
-            loader=FileSystemLoader(str(self.template_dir)) if self.template_dir.exists() else None,
-            autoescape=True
-        )
-        
-        # テンプレート作成
-        self._create_default_templates()
-        
-        # レポートスタイル設定
-        self._setup_styles()
+        # 日本語フォント設定
+        plt.rcParams['font.family'] = ['DejaVu Sans', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', 'Takao', 'IPAexGothic', 'IPAPGothic', 'VL PGothic', 'Noto Sans CJK JP']
     
-    def _setup_styles(self):
-        """レポートスタイル設定"""
-        # matplotlib日本語フォント設定
-        plt.rcParams['font.family'] = ['DejaVu Sans', 'Yu Gothic', 'Hiragino Sans', 'Noto Sans CJK JP']
-        plt.rcParams['axes.unicode_minus'] = False
+    def generate_comprehensive_report(self, data, analysis_results=None, title="Statistical Analysis Report", subtitle=""):
+        """包括的レポート生成"""
         
-        # カラーパレット
-        self.colors = {
-            'primary': '#2E86AB',
-            'secondary': '#A23B72',
-            'success': '#F18F01',
-            'warning': '#C73E1D',
-            'info': '#16537e',
-            'light': '#f8f9fa',
-            'dark': '#343a40'
-        }
-    
-    def _create_default_templates(self):
-        """デフォルトテンプレート作成"""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_file = self.report_dir / f"report_{timestamp}.html"
         
-        # HTMLレポートテンプレート
-        html_template = """<!DOCTYPE html>
+        # HTMLテンプレート
+        html_template = """
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ report_title }}</title>
+    <title>{{ title }}</title>
     <style>
         body {
-            font-family: 'Yu Gothic', 'Hiragino Sans', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
-            background-color: #f8f9fa;
+            background-color: #f5f5f5;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background-color: white;
+            background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
         .header {
             text-align: center;
-            border-bottom: 3px solid #2E86AB;
-            padding-bottom: 20px;
             margin-bottom: 30px;
+            border-bottom: 3px solid #2196F3;
+            padding-bottom: 20px;
         }
         .header h1 {
-            color: #2E86AB;
+            color: #1976D2;
             margin: 0;
             font-size: 2.5em;
         }
+        .header p {
+            color: #666;
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+        }
         .section {
-            margin-bottom: 40px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #fafafa;
+            border-left: 4px solid #2196F3;
+            border-radius: 5px;
         }
         .section h2 {
-            color: #343a40;
-            border-bottom: 2px solid #A23B72;
-            padding-bottom: 10px;
+            color: #1976D2;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+        .section h2::before {
+            content: "📊";
+            margin-right: 10px;
+            font-size: 1.2em;
         }
         .stats-grid {
             display: grid;
@@ -119,31 +100,27 @@ class ProfessionalReportGenerator:
             margin: 20px 0;
         }
         .stat-card {
-            background: linear-gradient(135deg, #2E86AB, #A23B72);
-            color: white;
+            background: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
         }
-        .stat-value {
-            font-size: 2em;
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            color: #1976D2;
+            font-size: 1.8em;
+        }
+        .stat-card p {
+            margin: 0;
+            color: #666;
             font-weight: bold;
-            margin: 10px 0;
-        }
-        .chart-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .chart-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: white;
+            margin: 20px 0;
+            background: white;
         }
         th, td {
             padding: 12px;
@@ -151,379 +128,248 @@ class ProfessionalReportGenerator:
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #2E86AB;
+            background: #2196F3;
             color: white;
+            font-weight: bold;
         }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            color: #888;
+        }
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #ff9800;
+            background: #fff3e0;
+        }
+        .success {
+            border-left-color: #4caf50;
+            background: #e8f5e8;
+        }
+        .warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        .error {
+            border-left-color: #f44336;
+            background: #ffebee;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>{{ report_title }}</h1>
-            <p>{{ report_subtitle }}</p>
+            <h1>{{ title }}</h1>
+            <p>{{ subtitle }}</p>
+            <p>生成日時: {{ generation_time }}</p>
         </div>
         
-        {% for section in sections %}
         <div class="section">
-            <h2>{{ section.title }}</h2>
-            
-            {% if section.stats %}
+            <h2>データ概要</h2>
             <div class="stats-grid">
-                {% for stat in section.stats %}
                 <div class="stat-card">
-                    <div class="stat-label">{{ stat.label }}</div>
-                    <div class="stat-value">{{ stat.value }}</div>
-                    <div class="stat-unit">{{ stat.unit }}</div>
+                    <h3>{{ data_rows }}</h3>
+                    <p>総行数</p>
                 </div>
+                <div class="stat-card">
+                    <h3>{{ data_cols }}</h3>
+                    <p>総列数</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{ numeric_cols }}</h3>
+                    <p>数値列数</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{ missing_values }}</h3>
+                    <p>欠損値数</p>
+                </div>
+            </div>
+            
+            <h3>📋 列情報</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>列名</th>
+                        <th>データ型</th>
+                        <th>欠損値数</th>
+                        <th>欠損率</th>
+                        <th>ユニーク値数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for col_info in column_info %}
+                    <tr>
+                        <td>{{ col_info.name }}</td>
+                        <td>{{ col_info.dtype }}</td>
+                        <td>{{ col_info.missing }}</td>
+                        <td>{{ col_info.missing_pct }}%</td>
+                        <td>{{ col_info.unique }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if has_numeric_data %}
+        <div class="section">
+            <h2>基本統計量</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>統計量</th>
+                        {% for col in numeric_columns %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat_name, stat_values in basic_stats.items() %}
+                    <tr>
+                        <td><strong>{{ stat_name }}</strong></td>
+                        {% for value in stat_values %}
+                        <td>{{ "%.4f"|format(value) }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if analysis_results %}
+        <div class="section">
+            <h2>解析結果</h2>
+            <div class="alert success">
+                <strong>✅ 解析完了:</strong> 実行された解析の結果をまとめています。
+            </div>
+            
+            {% for analysis_name, result in analysis_results.items() %}
+            <h3>🔬 {{ analysis_name }}</h3>
+            <pre style="background: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto;">{{ result }}</pre>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="section">
+            <h2>データ品質レポート</h2>
+            {% if quality_issues %}
+            <div class="alert warning">
+                <strong>⚠️ 品質上の注意点:</strong> 以下の点にご注意ください。
+            </div>
+            <ul>
+                {% for issue in quality_issues %}
+                <li>{{ issue }}</li>
                 {% endfor %}
+            </ul>
+            {% else %}
+            <div class="alert success">
+                <strong>✅ データ品質:</strong> 特に問題は検出されませんでした。
             </div>
-            {% endif %}
-            
-            {% if section.content %}
-            <div class="content">
-                {{ section.content | safe }}
-            </div>
-            {% endif %}
-            
-            {% if section.charts %}
-            {% for chart in section.charts %}
-            <div class="chart-container">
-                <h3>{{ chart.title }}</h3>
-                <img src="data:image/png;base64,{{ chart.image }}" alt="{{ chart.title }}">
-                {% if chart.description %}
-                <p>{{ chart.description }}</p>
-                {% endif %}
-            </div>
-            {% endfor %}
-            {% endif %}
-            
-            {% if section.tables %}
-            {% for table in section.tables %}
-            <h3>{{ table.title }}</h3>
-            {{ table.html | safe }}
-            {% endfor %}
             {% endif %}
         </div>
-        {% endfor %}
         
         <div class="footer">
-            <p>HAD Professional Statistical Analysis Software</p>
+            <p>🔬 HAD Professional Statistical Analysis Software</p>
+            <p>Generated by AI-Powered Statistical Analysis Engine</p>
+            <p>© 2024 Ryo Minegishi. All rights reserved.</p>
         </div>
     </div>
 </body>
-</html>"""
+</html>
+        """
         
-        template_file = self.template_dir / "report_template.html"
-        with open(template_file, "w", encoding="utf-8") as f:
-            f.write(html_template)
-    
-    def generate_comprehensive_report(self, data: pd.DataFrame, analysis_results: Dict = None,
-                                    title: str = "統計解析レポート",
-                                    subtitle: str = "Professional Statistical Analysis Report") -> str:
-        """包括的統計解析レポート生成"""
+        # データ解析
+        data_rows = len(data)
+        data_cols = len(data.columns)
+        numeric_cols = len(data.select_dtypes(include=[np.number]).columns)
+        missing_values = data.isnull().sum().sum()
         
-        if analysis_results is None:
-            analysis_results = {}
-        
-        report_data = {
-            'report_title': title,
-            'report_subtitle': subtitle,
-            'generation_time': datetime.now().strftime('%Y年%m月%d日 %H:%M:%S'),
-            'sections': []
-        }
-        
-        # 1. データ概要セクション
-        overview_section = self._create_overview_section(data)
-        report_data['sections'].append(overview_section)
-        
-        # 2. 記述統計セクション
-        descriptive_section = self._create_descriptive_section(data)
-        report_data['sections'].append(descriptive_section)
-        
-        # 3. データ品質セクション
-        quality_section = self._create_quality_section(data)
-        report_data['sections'].append(quality_section)
-        
-        # 4. 可視化セクション
-        visualization_section = self._create_visualization_section(data)
-        report_data['sections'].append(visualization_section)
-        
-        # 5. 解析結果セクション
-        if analysis_results:
-            analysis_section = self._create_analysis_section(analysis_results)
-            report_data['sections'].append(analysis_section)
-        
-        # HTMLレポート生成
-        html_content = self._render_template(report_data)
-        
-        # ファイル保存
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_file = self.output_dir / f"statistical_report_{timestamp}.html"
-        
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-        
-        return str(output_file)
-    
-    def _render_template(self, data: Dict) -> str:
-        """テンプレートレンダリング"""
-        template_file = self.template_dir / "report_template.html"
-        
-        if template_file.exists():
-            try:
-                template = self.jinja_env.get_template('report_template.html')
-                return template.render(**data)
-            except Exception as e:
-                print(f"テンプレートエラー: {e}")
-        
-        # フォールバック：簡単なHTMLレンダリング
-        return self._simple_html_render(data)
-    
-    def _simple_html_render(self, data: Dict) -> str:
-        """シンプルHTMLレンダリング"""
-        html = f"""<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>{data['report_title']}</title>
-    <style>
-        body {{ font-family: Arial, sans-serif; margin: 20px; }}
-        .section {{ margin-bottom: 30px; }}
-        h1 {{ color: #2E86AB; }}
-        h2 {{ color: #A23B72; border-bottom: 2px solid #A23B72; }}
-        table {{ border-collapse: collapse; width: 100%; }}
-        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
-        th {{ background-color: #2E86AB; color: white; }}
-    </style>
-</head>
-<body>
-    <h1>{data['report_title']}</h1>
-    <p><strong>生成日時:</strong> {data['generation_time']}</p>
-"""
-        
-        for section in data['sections']:
-            html += f"<div class='section'><h2>{section['title']}</h2>"
+        # 列情報
+        column_info = []
+        for col in data.columns:
+            missing_count = data[col].isnull().sum()
+            missing_pct = round((missing_count / len(data)) * 100, 2)
+            unique_count = data[col].nunique()
             
-            if 'content' in section:
-                html += section['content']
-            
-            if 'tables' in section:
-                for table in section['tables']:
-                    html += f"<h3>{table['title']}</h3>"
-                    html += table['html']
-            
-            html += "</div>"
+            column_info.append({
+                'name': col,
+                'dtype': str(data[col].dtype),
+                'missing': missing_count,
+                'missing_pct': missing_pct,
+                'unique': unique_count
+            })
         
-        html += "</body></html>"
-        return html
-    
-    def _create_overview_section(self, data: pd.DataFrame) -> Dict:
-        """データ概要セクション作成"""
-        
-        # 基本統計
-        numeric_cols = data.select_dtypes(include=[np.number]).columns
-        categorical_cols = data.select_dtypes(include=['object', 'category']).columns
-        
-        stats = [
-            {'label': '総レコード数', 'value': f"{data.shape[0]:,}", 'unit': '行'},
-            {'label': '総変数数', 'value': f"{data.shape[1]:,}", 'unit': '列'},
-            {'label': '数値変数', 'value': len(numeric_cols), 'unit': '個'},
-            {'label': 'カテゴリ変数', 'value': len(categorical_cols), 'unit': '個'},
-            {'label': '欠損値', 'value': f"{data.isnull().sum().sum():,}", 'unit': '個'}
-        ]
-        
-        # データ型情報テーブル
-        dtype_info = pd.DataFrame({
-            '変数名': data.columns,
-            'データ型': data.dtypes.astype(str),
-            '欠損値数': data.isnull().sum().values,
-            '欠損率': (data.isnull().sum() / len(data) * 100).round(2).astype(str) + '%',
-            'ユニーク値数': [data[col].nunique() for col in data.columns]
-        })
-        
-        return {
-            'title': '📊 データ概要',
-            'stats': stats,
-            'tables': [{
-                'title': 'データ型情報',
-                'html': dtype_info.to_html(classes='table', index=False, escape=False)
-            }]
-        }
-    
-    def _create_descriptive_section(self, data: pd.DataFrame) -> Dict:
-        """記述統計セクション作成"""
-        
+        # 基本統計量（数値列のみ）
         numeric_data = data.select_dtypes(include=[np.number])
+        has_numeric_data = len(numeric_data.columns) > 0
         
-        if numeric_data.empty:
-            return {
-                'title': '📈 記述統計',
-                'content': '<p>数値データが見つかりませんでした。</p>'
+        basic_stats = {}
+        numeric_columns = []
+        
+        if has_numeric_data:
+            numeric_columns = list(numeric_data.columns)
+            desc_stats = numeric_data.describe()
+            
+            basic_stats = {
+                '平均': desc_stats.loc['mean'].values,
+                '標準偏差': desc_stats.loc['std'].values,
+                '最小値': desc_stats.loc['min'].values,
+                '25%': desc_stats.loc['25%'].values,
+                '中央値': desc_stats.loc['50%'].values,
+                '75%': desc_stats.loc['75%'].values,
+                '最大値': desc_stats.loc['max'].values
             }
         
-        # 記述統計表
-        desc_stats = numeric_data.describe().round(3)
+        # データ品質の問題を検出
+        quality_issues = []
         
-        # 歪度・尖度追加
-        try:
-            desc_stats.loc['歪度'] = numeric_data.skew().round(3)
-            desc_stats.loc['尖度'] = numeric_data.kurtosis().round(3)
-        except:
-            pass
+        # 高い欠損率のチェック
+        high_missing = data.isnull().sum() / len(data) > 0.3
+        if high_missing.any():
+            high_missing_cols = data.columns[high_missing].tolist()
+            quality_issues.append(f"高い欠損率（>30%）の列: {', '.join(high_missing_cols)}")
         
-        # 相関行列
-        try:
-            correlation_matrix = numeric_data.corr().round(3)
-        except:
-            correlation_matrix = pd.DataFrame()
+        # 重複行のチェック
+        duplicate_count = data.duplicated().sum()
+        if duplicate_count > 0:
+            quality_issues.append(f"重複行が {duplicate_count} 行検出されました")
         
-        tables = [{
-            'title': '基本統計量',
-            'html': desc_stats.to_html(classes='table', escape=False)
-        }]
+        # 一意値が少ない数値列のチェック
+        for col in numeric_data.columns:
+            unique_ratio = data[col].nunique() / len(data)
+            if unique_ratio < 0.01 and data[col].nunique() > 1:
+                quality_issues.append(f"'{col}' 列の一意値比率が非常に低い（{unique_ratio:.3f}）")
         
-        if not correlation_matrix.empty:
-            tables.append({
-                'title': '相関行列',
-                'html': correlation_matrix.to_html(classes='table', escape=False)
-            })
+        # テンプレート描画
+        template = Template(html_template)
+        html_content = template.render(
+            title=title,
+            subtitle=subtitle,
+            generation_time=datetime.now().strftime("%Y年%m月%d日 %H:%M:%S"),
+            data_rows=f"{data_rows:,}",
+            data_cols=data_cols,
+            numeric_cols=numeric_cols,
+            missing_values=f"{missing_values:,}",
+            column_info=column_info,
+            has_numeric_data=has_numeric_data,
+            numeric_columns=numeric_columns,
+            basic_stats=basic_stats,
+            analysis_results=analysis_results or {},
+            quality_issues=quality_issues
+        )
         
-        return {
-            'title': '📈 記述統計',
-            'tables': tables
-        }
-    
-    def _create_quality_section(self, data: pd.DataFrame) -> Dict:
-        """データ品質セクション作成"""
+        # ファイル保存
+        with open(report_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
         
-        # 欠損値分析
-        missing_data = data.isnull().sum()
-        missing_data = missing_data[missing_data > 0]
-        
-        # 重複レコード分析
-        duplicates = data.duplicated().sum()
-        
-        quality_stats = [
-            {'label': '欠損値のある変数', 'value': len(missing_data), 'unit': '個'},
-            {'label': '重複レコード', 'value': duplicates, 'unit': '行'}
-        ]
-        
-        tables = []
-        
-        if not missing_data.empty:
-            missing_df = pd.DataFrame({
-                '変数名': missing_data.index,
-                '欠損数': missing_data.values,
-                '欠損率': (missing_data / len(data) * 100).round(2).astype(str) + '%'
-            })
-            tables.append({
-                'title': '欠損値情報',
-                'html': missing_df.to_html(classes='table', index=False, escape=False)
-            })
-        
-        return {
-            'title': '🔍 データ品質分析',
-            'stats': quality_stats,
-            'tables': tables
-        }
-    
-    def _create_visualization_section(self, data: pd.DataFrame) -> Dict:
-        """可視化セクション作成"""
-        
-        charts = []
-        
-        try:
-            # 数値データのヒストグラム
-            numeric_data = data.select_dtypes(include=[np.number])
-            
-            if not numeric_data.empty and len(numeric_data.columns) > 0:
-                # 分布図
-                fig, axes = plt.subplots(2, 2, figsize=(15, 12))
-                axes = axes.ravel()
-                
-                for i, col in enumerate(numeric_data.columns[:4]):
-                    if i < 4:
-                        axes[i].hist(numeric_data[col].dropna(), bins=30, alpha=0.7, color=self.colors['primary'])
-                        axes[i].set_title(f'{col} Distribution')
-                        axes[i].set_xlabel(col)
-                        axes[i].set_ylabel('Frequency')
-                        axes[i].grid(True, alpha=0.3)
-                
-                # 余った軸は非表示
-                for i in range(len(numeric_data.columns), 4):
-                    axes[i].set_visible(False)
-                
-                plt.tight_layout()
-                
-                # 画像をBase64に変換
-                buffer = BytesIO()
-                plt.savefig(buffer, format='png', dpi=300, bbox_inches='tight')
-                buffer.seek(0)
-                image_base64 = base64.b64encode(buffer.getvalue()).decode()
-                plt.close()
-                
-                charts.append({
-                    'title': '数値変数の分布',
-                    'image': image_base64,
-                    'description': '主要な数値変数のヒストグラム分布を表示'
-                })
-                
-                # 相関ヒートマップ
-                if len(numeric_data.columns) > 1:
-                    plt.figure(figsize=(10, 8))
-                    correlation_matrix = numeric_data.corr()
-                    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0,
-                               square=True)
-                    plt.title('Correlation Heatmap')
-                    plt.tight_layout()
-                    
-                    buffer = BytesIO()
-                    plt.savefig(buffer, format='png', dpi=300, bbox_inches='tight')
-                    buffer.seek(0)
-                    image_base64 = base64.b64encode(buffer.getvalue()).decode()
-                    plt.close()
-                    
-                    charts.append({
-                        'title': '変数間相関ヒートマップ',
-                        'image': image_base64,
-                        'description': '数値変数間の相関関係を色で表現'
-                    })
-        except Exception as e:
-            print(f"可視化エラー: {e}")
-        
-        return {
-            'title': '📊 データ可視化',
-            'charts': charts
-        }
-    
-    def _create_analysis_section(self, analysis_results: Dict) -> Dict:
-        """解析結果セクション作成"""
-        
-        content = '<div class="analysis-results">'
-        
-        for analysis_type, results in analysis_results.items():
-            content += f'<h3>{analysis_type}</h3>'
-            
-            if isinstance(results, dict):
-                content += '<ul>'
-                for key, value in results.items():
-                    if isinstance(value, (int, float)):
-                        content += f'<li><strong>{key}:</strong> {value:.4f}</li>'
-                    else:
-                        content += f'<li><strong>{key}:</strong> {value}</li>'
-                content += '</ul>'
-            else:
-                content += f'<p>{results}</p>'
-        
-        content += '</div>'
-        
-        return {
-            'title': '🧮 解析結果',
-            'content': content
-        }
+        return str(report_file)
 
 # グローバルインスタンス
-report_generator = ProfessionalReportGenerator()
+report_generator = ReportGenerator()

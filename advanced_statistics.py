@@ -5,7 +5,7 @@ Advanced Statistical Analysis Module
 高度統計解析モジュール
 
 Author: Ryo Minegishi
-License: MIT
+Email: r.minegishi1987@gmail.com
 """
 
 import numpy as np
@@ -32,6 +32,11 @@ import seaborn as sns
 from tqdm import tqdm
 import concurrent.futures
 import multiprocessing as mp
+from scipy.stats import mannwhitneyu, kruskal, friedmanchisquare, wilcoxon
+import statsmodels.stats.api as sms
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from statsmodels.multivariate.factor import Factor
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 
 # プロフェッショナル機能インポート
 try:
@@ -42,7 +47,7 @@ except ImportError:
 
 warnings.filterwarnings('ignore')
 
-class AdvancedStatisticalAnalyzer:
+class AdvancedStatsAnalyzer:
     """高度統計解析クラス"""
     
     def __init__(self, n_jobs: int = -1):
@@ -604,6 +609,448 @@ class AdvancedStatisticalAnalyzer:
             'vif': vif_results,
             'max_correlation': correlation_matrix.abs().values[np.triu_indices_from(correlation_matrix.values, k=1)].max()
         }
+    
+    def factor_analysis(self, data, n_factors=None, rotation='varimax', method='ml'):
+        """因子分析"""
+        try:
+            # 数値データのみ抽出
+            numeric_data = data.select_dtypes(include=[np.number]).dropna()
+            
+            if numeric_data.empty:
+                return {"success": False, "error": "数値データが見つかりません"}
+            
+            # 標準化
+            scaler = StandardScaler()
+            scaled_data = scaler.fit_transform(numeric_data)
+            
+            # 因子数の決定（Kaiser基準）
+            if n_factors is None:
+                # 相関行列の固有値計算
+                corr_matrix = np.corrcoef(scaled_data.T)
+                eigenvalues = np.linalg.eigvals(corr_matrix)
+                n_factors = np.sum(eigenvalues > 1)
+                n_factors = max(1, min(n_factors, len(numeric_data.columns) - 1))
+            
+            # 因子分析実行
+            fa = FactorAnalysis(n_components=n_factors, rotation=rotation, random_state=42)
+            fa.fit(scaled_data)
+            
+            # 因子負荷量
+            loadings = fa.components_.T
+            
+            # 因子得点
+            factor_scores = fa.transform(scaled_data)
+            
+            # 共通性計算
+            communalities = np.sum(loadings**2, axis=1)
+            
+            # 因子の寄与率
+            eigenvalues_fa = np.sum(loadings**2, axis=0)
+            variance_explained = eigenvalues_fa / len(numeric_data.columns)
+            cumulative_variance = np.cumsum(variance_explained)
+            
+            # KMO適合性測定
+            kmo_statistic = self._calculate_kmo(corr_matrix)
+            
+            # Bartlett球面性検定
+            bartlett_stat, bartlett_p = self._bartlett_test(corr_matrix, len(numeric_data))
+            
+            return {
+                "success": True,
+                "n_factors": n_factors,
+                "factor_loadings": pd.DataFrame(
+                    loadings, 
+                    index=numeric_data.columns,
+                    columns=[f"Factor{i+1}" for i in range(n_factors)]
+                ),
+                "factor_scores": pd.DataFrame(
+                    factor_scores,
+                    columns=[f"Factor{i+1}" for i in range(n_factors)]
+                ),
+                "communalities": pd.Series(communalities, index=numeric_data.columns),
+                "eigenvalues": eigenvalues_fa,
+                "variance_explained": variance_explained,
+                "cumulative_variance": cumulative_variance,
+                "kmo": kmo_statistic,
+                "bartlett_test": {"statistic": bartlett_stat, "p_value": bartlett_p},
+                "rotation": rotation,
+                "method": method
+            }
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    def discriminant_analysis(self, data, target_col, method='linear'):
+        """判別分析"""
+        try:
+            if target_col not in data.columns:
+                return {"success": False, "error": f"目的変数 '{target_col}' が見つかりません"}
+            
+            # データ準備
+            feature_cols = data.select_dtypes(include=[np.number]).columns.tolist()
+            if target_col in feature_cols:
+                feature_cols.remove(target_col)
+            
+            X = data[feature_cols].dropna()
+            y = data[target_col].dropna()
+            
+            # 共通のインデックスでデータを揃える
+            common_idx = X.index.intersection(y.index)
+            X = X.loc[common_idx]
+            y = y.loc[common_idx]
+            
+            if len(X) == 0:
+                return {"success": False, "error": "有効なデータがありません"}
+            
+            # 標準化
+            scaler = StandardScaler()
+            X_scaled = scaler.fit_transform(X)
+            
+            # 判別分析実行
+            if method == 'linear':
+                da = LinearDiscriminantAnalysis()
+            else:
+                da = QuadraticDiscriminantAnalysis()
+            
+            da.fit(X_scaled, y)
+            
+            # 予測
+            y_pred = da.predict(X_scaled)
+            
+            # 判別得点
+            if method == 'linear':
+                discriminant_scores = da.transform(X_scaled)
+            else:
+                discriminant_scores = da.decision_function(X_scaled)
+            
+            # 精度計算
+            accuracy = np.mean(y == y_pred)
+            
+            # 混同行列
+            from sklearn.metrics import confusion_matrix, classification_report
+            cm = confusion_matrix(y, y_pred)
+            report = classification_report(y, y_pred, output_dict=True)
+            
+            # 変数の重要度（線形判別の場合）
+            feature_importance = None
+            if method == 'linear' and hasattr(da, 'coef_'):
+                feature_importance = pd.Series(
+                    np.abs(da.coef_[0]), 
+                    index=feature_cols
+                ).sort_values(ascending=False)
+            
+            return {
+                "success": True,
+                "method": method,
+                "accuracy": accuracy,
+                "predictions": y_pred,
+                "discriminant_scores": discriminant_scores,
+                "confusion_matrix": cm,
+                "classification_report": report,
+                "feature_importance": feature_importance,
+                "classes": da.classes_,
+                "n_components": da.n_components_ if hasattr(da, 'n_components_') else None
+            }
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    def nonparametric_tests(self, data, group_col=None, value_col=None, test_type='auto'):
+        """ノンパラメトリック検定"""
+        try:
+            results = {}
+            
+            if group_col and value_col:
+                # グループ比較検定
+                if group_col not in data.columns or value_col not in data.columns:
+                    return {"success": False, "error": "指定された列が見つかりません"}
+                
+                groups = data.groupby(group_col)[value_col].apply(list)
+                group_names = list(groups.index)
+                group_data = list(groups.values)
+                
+                # データのフィルタリング（欠損値除去）
+                group_data = [np.array(group)[~np.isnan(group)] for group in group_data if len(group) > 0]
+                
+                if len(group_data) < 2:
+                    return {"success": False, "error": "比較可能なグループが不足しています"}
+                
+                # 検定選択
+                if test_type == 'auto':
+                    test_type = 'mann_whitney' if len(group_data) == 2 else 'kruskal'
+                
+                if test_type == 'mann_whitney' and len(group_data) == 2:
+                    # Mann-Whitney U検定
+                    statistic, p_value = mannwhitneyu(group_data[0], group_data[1], alternative='two-sided')
+                    results['mann_whitney'] = {
+                        "statistic": statistic,
+                        "p_value": p_value,
+                        "groups": group_names[:2],
+                        "n1": len(group_data[0]),
+                        "n2": len(group_data[1])
+                    }
+                
+                elif test_type == 'kruskal':
+                    # Kruskal-Wallis検定
+                    statistic, p_value = kruskal(*group_data)
+                    results['kruskal_wallis'] = {
+                        "statistic": statistic,
+                        "p_value": p_value,
+                        "groups": group_names,
+                        "n_groups": len(group_data),
+                        "total_n": sum(len(group) for group in group_data)
+                    }
+                    
+                    # 事後検定（Dunn's test）
+                    if p_value < 0.05:
+                        dunn_results = self._dunn_test(data, group_col, value_col)
+                        results['dunn_posthoc'] = dunn_results
+            
+            else:
+                # 単一サンプル検定
+                numeric_cols = data.select_dtypes(include=[np.number]).columns.tolist()
+                
+                for col in numeric_cols[:5]:  # 最初の5列のみ
+                    col_data = data[col].dropna()
+                    
+                    if len(col_data) < 3:
+                        continue
+                    
+                    # Wilcoxon符号順位検定（中央値=0の検定）
+                    try:
+                        statistic, p_value = wilcoxon(col_data)
+                        results[f'{col}_wilcoxon'] = {
+                            "statistic": statistic,
+                            "p_value": p_value,
+                            "n": len(col_data),
+                            "median": np.median(col_data)
+                        }
+                    except:
+                        pass
+            
+            return {"success": True, "results": results}
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    def effect_size_analysis(self, data, group_col, value_col):
+        """効果量分析"""
+        try:
+            if group_col not in data.columns or value_col not in data.columns:
+                return {"success": False, "error": "指定された列が見つかりません"}
+            
+            # データ準備
+            clean_data = data[[group_col, value_col]].dropna()
+            groups = clean_data.groupby(group_col)[value_col]
+            
+            results = {}
+            
+            # 記述統計
+            descriptive = groups.agg(['count', 'mean', 'std', 'median']).round(4)
+            results['descriptive'] = descriptive
+            
+            # 2群比較の場合
+            if len(groups) == 2:
+                group_names = list(groups.groups.keys())
+                group1_data = groups.get_group(group_names[0])
+                group2_data = groups.get_group(group_names[1])
+                
+                # Cohen's d
+                cohens_d = self._calculate_cohens_d(group1_data, group2_data)
+                
+                # Glass's delta
+                glass_delta = (group1_data.mean() - group2_data.mean()) / group1_data.std()
+                
+                # Hedge's g
+                pooled_std = np.sqrt(((len(group1_data) - 1) * group1_data.var() + 
+                                     (len(group2_data) - 1) * group2_data.var()) / 
+                                    (len(group1_data) + len(group2_data) - 2))
+                hedges_g = (group1_data.mean() - group2_data.mean()) / pooled_std
+                
+                results['effect_sizes'] = {
+                    "cohens_d": cohens_d,
+                    "glass_delta": glass_delta,
+                    "hedges_g": hedges_g,
+                    "interpretation_cohens_d": self._interpret_cohens_d(cohens_d)
+                }
+            
+            # 多群比較の場合（η²）
+            if len(groups) > 2:
+                # One-way ANOVA
+                group_data = [group[1] for group in groups]
+                f_stat, p_value = stats.f_oneway(*group_data)
+                
+                # Eta squared (η²)
+                ss_between = sum(len(group) * (group.mean() - clean_data[value_col].mean())**2 
+                                for group in group_data)
+                ss_total = sum((clean_data[value_col] - clean_data[value_col].mean())**2)
+                eta_squared = ss_between / ss_total
+                
+                # Omega squared (ω²)
+                ms_within = (ss_total - ss_between) / (len(clean_data) - len(groups))
+                omega_squared = (ss_between - (len(groups) - 1) * ms_within) / (ss_total + ms_within)
+                
+                results['effect_sizes'] = {
+                    "eta_squared": eta_squared,
+                    "omega_squared": omega_squared,
+                    "f_statistic": f_stat,
+                    "p_value": p_value,
+                    "interpretation_eta": self._interpret_eta_squared(eta_squared)
+                }
+            
+            return {"success": True, "results": results}
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    def multiple_comparison_tests(self, data, group_col, value_col, method='tukey'):
+        """多重比較検定"""
+        try:
+            if group_col not in data.columns or value_col not in data.columns:
+                return {"success": False, "error": "指定された列が見つかりません"}
+            
+            # データ準備
+            clean_data = data[[group_col, value_col]].dropna()
+            
+            if method.lower() == 'tukey':
+                # Tukey HSD検定
+                tukey_results = pairwise_tukeyhsd(
+                    clean_data[value_col], 
+                    clean_data[group_col], 
+                    alpha=0.05
+                )
+                
+                # 結果をDataFrameに変換
+                results_df = pd.DataFrame({
+                    'group1': tukey_results.groupsunique[tukey_results._multicomp.pairindices[0]],
+                    'group2': tukey_results.groupsunique[tukey_results._multicomp.pairindices[1]],
+                    'meandiff': tukey_results.meandiffs,
+                    'p_adj': tukey_results.pvalues,
+                    'lower': tukey_results.confint[:, 0],
+                    'upper': tukey_results.confint[:, 1],
+                    'reject': tukey_results.reject
+                })
+                
+                return {
+                    "success": True,
+                    "method": "Tukey HSD",
+                    "results": results_df,
+                    "summary": str(tukey_results)
+                }
+            
+            else:
+                # Bonferroni補正
+                groups = clean_data.groupby(group_col)[value_col]
+                group_names = list(groups.groups.keys())
+                
+                comparisons = []
+                for i in range(len(group_names)):
+                    for j in range(i+1, len(group_names)):
+                        group1_data = groups.get_group(group_names[i])
+                        group2_data = groups.get_group(group_names[j])
+                        
+                        # t検定
+                        t_stat, p_value = stats.ttest_ind(group1_data, group2_data)
+                        
+                        comparisons.append({
+                            'group1': group_names[i],
+                            'group2': group_names[j],
+                            't_statistic': t_stat,
+                            'p_value': p_value,
+                            'mean_diff': group1_data.mean() - group2_data.mean()
+                        })
+                
+                # Bonferroni補正
+                n_comparisons = len(comparisons)
+                for comp in comparisons:
+                    comp['p_adj_bonferroni'] = min(comp['p_value'] * n_comparisons, 1.0)
+                    comp['significant_bonferroni'] = comp['p_adj_bonferroni'] < 0.05
+                
+                results_df = pd.DataFrame(comparisons)
+                
+                return {
+                    "success": True,
+                    "method": "Bonferroni",
+                    "results": results_df,
+                    "n_comparisons": n_comparisons
+                }
+                
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    # ヘルパーメソッド
+    def _calculate_kmo(self, corr_matrix):
+        """KMO適合性測定計算"""
+        try:
+            inv_corr = np.linalg.inv(corr_matrix)
+            partial_corr = -inv_corr / np.sqrt(np.outer(np.diag(inv_corr), np.diag(inv_corr)))
+            np.fill_diagonal(partial_corr, 0)
+            
+            corr_sum = np.sum(corr_matrix**2) - np.trace(corr_matrix**2)
+            partial_sum = np.sum(partial_corr**2)
+            
+            return corr_sum / (corr_sum + partial_sum)
+        except:
+            return np.nan
+    
+    def _bartlett_test(self, corr_matrix, n):
+        """Bartlett球面性検定"""
+        try:
+            p = corr_matrix.shape[0]
+            det_corr = np.linalg.det(corr_matrix)
+            
+            statistic = -(n - 1 - (2*p + 5)/6) * np.log(det_corr)
+            df = p * (p - 1) / 2
+            p_value = 1 - stats.chi2.cdf(statistic, df)
+            
+            return statistic, p_value
+        except:
+            return np.nan, np.nan
+    
+    def _calculate_cohens_d(self, group1, group2):
+        """Cohen's d計算"""
+        pooled_std = np.sqrt(((len(group1) - 1) * group1.var() + 
+                             (len(group2) - 1) * group2.var()) / 
+                            (len(group1) + len(group2) - 2))
+        return (group1.mean() - group2.mean()) / pooled_std
+    
+    def _interpret_cohens_d(self, d):
+        """Cohen's d解釈"""
+        abs_d = abs(d)
+        if abs_d < 0.2:
+            return "negligible"
+        elif abs_d < 0.5:
+            return "small"
+        elif abs_d < 0.8:
+            return "medium"
+        else:
+            return "large"
+    
+    def _interpret_eta_squared(self, eta_sq):
+        """η²解釈"""
+        if eta_sq < 0.01:
+            return "negligible"
+        elif eta_sq < 0.06:
+            return "small"
+        elif eta_sq < 0.14:
+            return "medium"
+        else:
+            return "large"
+    
+    def _dunn_test(self, data, group_col, value_col):
+        """Dunn's事後検定（簡易版）"""
+        try:
+            # pingouin使用
+            results = pg.pairwise_tests(
+                data=data, 
+                dv=value_col, 
+                between=group_col, 
+                parametric=False,
+                padjust='bonf'
+            )
+            return results.to_dict('records')
+        except:
+            return "Dunn's test unavailable"
 
-# グローバルインスタンス
-advanced_analyzer = AdvancedStatisticalAnalyzer()
+# インスタンス作成
+advanced_analyzer = AdvancedStatsAnalyzer()

@@ -226,6 +226,9 @@ $RECYCLE.BIN/
 .vscode/
 *.code-workspace
 
+# Cursor関連
+.specstory/
+
 # 出力ファイル
 output/
 results/
