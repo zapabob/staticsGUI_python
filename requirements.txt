@@ -1,8 +1,9 @@
 # Professional Statistics Suite - Requirements
 # RTX 30/40/50 & Apple Silicon M2+ Optimized Dependencies
+# SPSS-Grade Performance Enhancement
 
 # ================================================
-# Core Data Science Libraries
+# Core Data Science Libraries - SPSS Grade
 # ================================================
 numpy>=1.24.0
 pandas>=2.0.0
@@ -11,6 +12,12 @@ scikit-learn>=1.3.0
 matplotlib>=3.7.0
 seaborn>=0.12.0
 plotly>=5.17.0
+
+# Large-scale data processing (SPSS級データ処理)
+polars>=0.20.0  # Lightning-fast DataFrame operations
+modin>=0.25.0   # Pandas acceleration with Ray/Dask
+vaex>=4.17.0    # Out-of-core DataFrame processing for billion-row datasets
+datatable>=1.0.0  # High-performance data manipulation
 
 # ================================================
 # GPU Acceleration - NVIDIA RTX 30/40/50 Series
@@ -29,6 +36,11 @@ nvidia-cublas-cu12>=12.1.0; platform_system=="Windows" or platform_system=="Linu
 nvidia-cuda-runtime-cu12>=12.1.0; platform_system=="Windows" or platform_system=="Linux"
 nvidia-cudnn-cu12>=8.9.0; platform_system=="Windows" or platform_system=="Linux"
 
+# GPU-accelerated libraries
+cupy>=12.3.0; platform_system=="Windows" or platform_system=="Linux"  # NumPy-like GPU arrays
+cudf>=23.12.0; platform_system=="Linux"  # GPU-accelerated DataFrames
+rapids-cuml>=23.12.0; platform_system=="Linux"  # GPU-accelerated ML
+
 # ================================================
 # Apple Silicon M2+ Optimization
 # ================================================
@@ -38,7 +50,35 @@ tensorflow-metal>=1.0.0; platform_system=="Darwin"
 mlx>=0.0.9; platform_system=="Darwin"
 
 # ================================================
-# Advanced Machine Learning & AI
+# High-Performance Statistical Computing
+# ================================================
+# Advanced statistical libraries
+statsmodels>=0.14.0
+pingouin>=0.5.3
+lifelines>=0.27.0
+pymc>=5.8.0
+arviz>=0.16.0
+scikit-survival>=0.21.0
+
+# Specialized statistical packages
+rpy2>=3.5.0  # R integration for advanced statistical methods
+pystan>=3.8.0
+numpyro>=0.13.0; platform_system=="Darwin"
+
+# Time series (superior to SPSS)
+prophet>=1.1.4
+arch>=6.2.0
+statsforecast>=1.5.0
+tsfresh>=0.20.0
+sktime>=0.25.0
+tslearn>=0.6.0
+
+# Econometrics
+linearmodels>=5.3.0
+pyblp>=0.13.0
+
+# ================================================
+# Advanced Machine Learning & AI (Beyond SPSS)
 # ================================================
 xgboost>=2.0.0
 lightgbm>=4.1.0
@@ -49,32 +89,23 @@ langchain>=0.0.340
 openai>=1.3.0
 google-generativeai>=0.3.0
 
+# AutoML (automated machine learning)
+auto-sklearn>=0.15.0
+autogluon>=1.0.0
+h2o>=3.44.0
+
+# Deep learning frameworks
+keras>=2.14.0
+pytorch-lightning>=2.1.0
+
 # Model interpretability
 shap>=0.43.0
 lime>=0.2.0.1
+eli5>=0.13.0
+alibi>=0.9.0
 
 # ================================================
-# Statistical Analysis & Advanced Methods
-# ================================================
-statsmodels>=0.14.0
-pingouin>=0.5.3
-lifelines>=0.27.0
-pymc>=5.8.0
-arviz>=0.16.0
-scikit-survival>=0.21.0
-
-# Time series analysis
-prophet>=1.1.4
-arch>=6.2.0
-statsforecast>=1.5.0
-tsfresh>=0.20.0
-
-# Bayesian analysis
-pystan>=3.8.0
-numpyro>=0.13.0; platform_system=="Darwin"  # Apple Silicon optimized
-
-# ================================================
-# High-Performance Computing
+# High-Performance Computing (HPC)
 # ================================================
 numba>=0.58.0
 jax>=0.4.20; platform_system=="Darwin"  # Apple Silicon accelerated
@@ -84,13 +115,19 @@ jaxlib>=0.4.20; platform_system=="Darwin"
 joblib>=1.3.0
 dask[complete]>=2023.10.0
 ray>=2.8.0
+multiprocessing-logging>=0.3.4
+
+# Distributed computing
+pyspark>=3.5.0
+mpi4py>=3.1.0; platform_system=="Linux"
 
 # Memory optimization
 psutil>=5.9.0
 memory-profiler>=0.61.0
+pympler>=0.9
 
 # ================================================
-# Visualization & Graphics
+# Enterprise-Grade Visualization (SPSS級)
 # ================================================
 bokeh>=3.3.0
 altair>=5.1.0
@@ -101,32 +138,72 @@ plotly-dash>=2.14.0
 # 3D visualization
 mayavi>=4.8.0; platform_system=="Windows" or platform_system=="Linux"
 vtk>=9.3.0
+pyvista>=0.43.0
+
+# Interactive visualization
+holoviews>=1.18.0
+panel>=1.3.0
+ipywidgets>=8.1.0
+ipyvolume>=0.6.0
+
+# Statistical plotting
+yellowbrick>=1.5
+missingno>=0.5.2
 
 # ================================================
-# GUI Frameworks
+# Advanced GUI Frameworks
 # ================================================
 customtkinter>=5.2.0
 PyQt6>=6.6.0; platform_system=="Windows" or platform_system=="Linux"
 pyside6>=6.6.0; platform_system=="Darwin"  # Better Mac support
 
+# Web-based interfaces
+streamlit>=1.28.0
+gradio>=4.8.0
+nicegui>=1.4.0
+
 # ================================================
-# Data Processing & I/O
+# Big Data & Database Support
 # ================================================
+# File formats
 openpyxl>=3.1.0
 xlsxwriter>=3.1.0
 pyarrow>=14.0.0
 h5py>=3.10.0
 tables>=3.9.0
 zarr>=2.16.0
+feather-format>=0.4.1
 
 # Database connectivity
 sqlalchemy>=2.0.0
 pymongo>=4.6.0
 redis>=5.0.0
+psycopg2-binary>=2.9.0
+pymysql>=1.1.0
+cx-oracle>=8.3.0; platform_system=="Windows" or platform_system=="Linux"
+
+# Cloud storage
+boto3>=1.34.0  # AWS
+google-cloud-storage>=2.10.0  # GCP
+azure-storage-blob>=12.19.0  # Azure
 
 # ================================================
-# Image & Computer Vision
+# Advanced Analytics & Domain-Specific
 # ================================================
+# Network analysis
+networkx>=3.2.0
+igraph>=0.10.0; platform_system=="Windows" or platform_system=="Linux"
+graph-tool>=2.45; platform_system=="Linux"
+
+# Text analytics
+spacy>=3.7.0
+nltk>=3.8.0
+textblob>=0.17.0
+wordcloud>=1.9.0
+gensim>=4.3.0
+textstat>=0.7.0
+
+# Image processing
 pillow>=10.1.0
 opencv-python>=4.8.0
 scikit-image>=0.22.0
@@ -136,16 +213,12 @@ imageio>=2.31.0
 pytesseract>=0.3.10
 easyocr>=1.7.0
 
-# ================================================
-# Natural Language Processing
-# ================================================
-spacy>=3.7.0
-nltk>=3.8.0
-textblob>=0.17.0
-wordcloud>=1.9.0
+# Audio processing
+librosa>=0.10.0
+soundfile>=0.12.0
 
 # ================================================
-# Professional Features
+# Professional Reporting & Documentation
 # ================================================
 # Report generation
 jinja2>=3.1.0
@@ -153,17 +226,34 @@ fpdf2>=2.7.0
 weasyprint>=60.0; platform_system=="Windows" or platform_system=="Linux"
 reportlab>=4.0.0
 
+# LaTeX support
+pylatex>=1.4.1
+
+# Documentation generation
+sphinx>=7.2.0
+jupyter>=1.0.0
+nbconvert>=7.12.0
+
+# ================================================
+# Security & Enterprise Features
+# ================================================
 # Security & encryption
 cryptography>=41.0.0
 keyring>=24.3.0
+bcrypt>=4.1.0
 
 # Configuration management
 python-dotenv>=1.0.0
 pyyaml>=6.0.0
 toml>=0.10.0
+configparser>=6.0.0
+
+# Logging & monitoring
+loguru>=0.7.0
+structlog>=23.2.0
 
 # ================================================
-# Network & API
+# Network & API Integration
 # ================================================
 requests>=2.31.0
 aiohttp>=3.9.0
@@ -176,12 +266,17 @@ pydantic>=2.5.0
 uvicorn>=0.24.0
 
 # ================================================
-# Development & Testing
+# Development & Quality Assurance
 # ================================================
 tqdm>=4.66.0
 rich>=13.7.0
 typer>=0.9.0
 click>=8.1.0
+
+# Code quality
+black>=23.11.0
+flake8>=6.1.0
+mypy>=1.7.0
 
 # Testing (optional)
 pytest>=7.4.0
@@ -189,57 +284,54 @@ pytest-cov>=4.1.0
 pytest-benchmark>=4.0.0
 
 # ================================================
-# Network Analysis & Graph Theory
+# Specialized Statistical Methods
 # ================================================
-networkx>=3.2.0
-igraph>=0.10.0; platform_system=="Windows" or platform_system=="Linux"
-graph-tool>=2.45; platform_system=="Linux"
+# Survival analysis
+lifelines>=0.27.0
+scikit-survival>=0.21.0
+
+# Causal inference
+causalml>=0.15.0
+econml>=0.14.0
+dowhy>=0.10.0
+
+# Bayesian methods
+pymc>=5.8.0
+bambi>=0.12.0
+arviz>=0.16.0
+
+# Meta-analysis
+metapy>=0.2.4
+
+# Signal processing
+pywavelets>=1.5.0
+
+# Optimization
+cvxpy>=1.4.0
+scipy>=1.10.0
 
 # ================================================
-# Dimensionality Reduction & Clustering
-# ================================================
-umap-learn>=0.5.4
-hdbscan>=0.8.33
-pacmap>=0.6.4
-trimap>=1.1.4
-
-# ================================================
-# Optimization & Hyperparameter Tuning
-# ================================================
-hyperopt>=0.2.7
-skopt>=0.9.0
-bayesian-optimization>=1.4.0
-
-# ================================================
-# Audio Processing (for multimodal analysis)
-# ================================================
-librosa>=0.10.0
-soundfile>=0.12.0
-
-# ================================================
-# GPU Memory Management
-# ================================================
-# NVIDIA GPU monitoring
-gpustat>=1.1.0; platform_system=="Windows" or platform_system=="Linux"
-pynvml>=11.5.0; platform_system=="Windows" or platform_system=="Linux"
-
-# Apple Silicon monitoring
-py-cpuinfo>=9.0.0; platform_system=="Darwin"
-
-# ================================================
-# Performance Profiling
+# Performance Monitoring & Profiling
 # ================================================
 line-profiler>=4.1.0
 py-spy>=0.3.14
 scalene>=1.5.0
 
 # ================================================
-# Jupyter Ecosystem (Optional)
+# Additional Utilities
 # ================================================
-jupyter>=1.0.0
-jupyterlab>=4.0.0
-ipywidgets>=8.1.0
-notebook>=7.0.0
+# Progress bars
+tqdm>=4.66.0
+alive-progress>=3.1.0
+
+# Date/time handling
+pendulum>=2.1.0
+arrow>=1.3.0
+
+# Utilities
+more-itertools>=10.1.0
+toolz>=0.12.0
+funcy>=2.0
 
 # ================================================
 # Platform-Specific Optimizations
