@@ -491,7 +491,7 @@ git clone https://github.com/zapabob/professional-statistics-suite.git && cd pro
 ---
 
 **© 2024 Ryo Minegishi. Professional Statistics Suite - The Future of Statistical Analysis.**  
-**© 2024 峰岸 諒. Professional Statistics Suite - 統計解析の未来形.**
+**© 2024 峯岸　亮. Professional Statistics Suite - 統計解析の未来形.**
 
 [![Made with ❤️ in Japan](https://img.shields.io/badge/Made%20with%20❤️%20in-Japan-red.svg)]()
 [![Powered by Science](https://img.shields.io/badge/Powered%20by-Science-blue.svg)]()
